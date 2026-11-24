@@ -1,0 +1,133 @@
+
+=== Volume and backlog
+              n     mean_h
+created_at                
+7           390  41.302137
+8           462  45.968615
+9           592  50.098170
+Tickets created Jul -> Sep: 390 -> 592 (+52%)
+Mean hours open per ticket Jul -> Sep: 41 -> 50 (+21%) (Sep is understated: still-open tickets are cut off at the pull)
+Average tickets open per day by month: {7: 19.6, 8: 29.1, 9: 43.0}
+Open tickets, first half Aug vs last half Sep: 29 -> 50 (+72%)
+Open at pull: 48 (34 have been to engineering)
+Median hours to close, non-escalated, by month: {7: 8.6, 8: 11.0, 9: 12.9}
+Median first response hours by month: {7: 2.0, 8: 2.5, 9: 3.2}
+created_at                           7    8    9    growth
+category                                                  
+Roster / booking not syncing       104  112  128  0.230769
+Report export failing               57   59   90  0.578947
+Live tracking / GPS incorrect       65   80   83  0.276923
+Cab delay / no-show complaint       29   46   72  1.482759
+Billing / invoice discrepancy       24   22   42  0.750000
+Login / access issue                29   31   40  0.379310
+Employee address / geocode change   13   23   39  2.000000
+How-to / feature request            23   43   38  0.652174
+OTP / boarding issue                28   30   37  0.321429
+Driver / vehicle compliance docs    18   16   23  0.277778
+Tier by month: {7: {'Enterprise': 159, 'Mid-market': 175, 'SMB': 56}, 8: {'Enterprise': 202, 'Mid-market': 211, 'SMB': 49}, 9: {'Enterprise': 253, 'Mid-market': 270, 'SMB': 69}}
+
+=== Escalations
+Escalated: 486 of 1444 (34%) but 71% of all ticket-hours open
+Median hours open: escalated 85 vs L1-only 13
+outcome
+Fixed                                 211
+Insufficient info - returned to L1     89
+Config issue - returned to L1          84
+Duplicate of known issue               56
+Not a bug - how-to                     24
+Not reproducible                       22
+Name: count, dtype: int64 
+Fixed: 43%; returned/not-a-bug: 57%
+Preventable (config + insufficient info + how-to): 197 (41% of escalations)
+                                      n  handoffs  median_h  csat     hours
+outcome                                                                    
+Config issue - returned to L1        84      2.39    128.57  2.43  11762.72
+Duplicate of known issue             56      1.21     67.37  3.47   4452.77
+Fixed                               211      1.18     64.83  3.41  16446.22
+Insufficient info - returned to L1   89      2.33    116.85  2.66  11896.23
+Not a bug - how-to                   24      1.17     67.33  3.20   1739.77
+Not reproducible                     22      1.09     63.43  3.40   1557.83
+By handoffs: {1: 58.0, 2: 110.0, 3: 164.0}
+Handoffs per escalation: 1.60; with 2+ handoffs: 229
+Config+insufficient: 173 tickets, 35% of all ticket-hours; avg handoffs 2.4; CSAT 2.55 vs fixed 3.41
+If config+insufficient (173) were handled like an L1 ticket: -20,201 ticket-hours = -30% average open backlog
+If all preventable (197) were handled like an L1 ticket: -21,461 ticket-hours = -32% average open backlog
+If all non-fixed (275) were handled like an L1 ticket: -25,913 ticket-hours = -39% average open backlog
+Outcome mix by month:
+ outcome     Config issue - returned to L1  ...  Not reproducible
+created_at                                 ...                  
+7                                    0.19  ...              0.07
+8                                    0.17  ...              0.03
+9                                    0.16  ...              0.04
+
+[3 rows x 6 columns]
+Duplicates by category & month:
+ created_at                     7  8   9
+category                               
+How-to / feature request       0  1   0
+Live tracking / GPS incorrect  0  5   2
+OTP / boarding issue           1  1   0
+Report export failing          5  9  16
+Roster / booking not syncing   2  5   9
+Duplicates, top issues:
+ tmpl
+Scheduled report email not received                        9
+Monthly trip report download stuck at loading              9
+Exported report missing N trips                            7
+Cancelled bookings still appearing in tomorrow's roster    5
+Name: count, dtype: int64
+Bounce rate by category (range): {'Billing / invoice discrepancy': 0.5, 'Live tracking / GPS incorrect': 0.53, 'OTP / boarding issue': 0.62, 'Report export failing': 0.66, 'Roster / booking not syncing': 0.55}
+
+=== Agents
+                tickets  escalation_rate  ...  bounce_rate  preventable_bounces
+assigned_agent                            ...                                  
+Rahul T             151             0.62  ...         0.75                   61
+Karan B             217             0.16  ...         0.63                   17
+Neha P              171             0.29  ...         0.61                   18
+Arjun K             178             0.33  ...         0.57                   18
+Priya D             186             0.33  ...         0.54                   22
+Sneha M             176             0.35  ...         0.49                   21
+Ananya R            189             0.40  ...         0.47                   26
+Vikram S            176             0.30  ...         0.40                   14
+
+[8 rows x 8 columns]
+Karan B: median first close 7.9h vs rest 22.0h; reopen 29% vs 7%; 64 of 151 reopened tickets (42%) from 15% of volume; CSAT 3.13 vs 3.81
+Rahul T: escalates 62% vs team 30%; bounce 75%; how-to escalations 18 of 24
+Agent bounce-rate range 40%–75%
+Reopened tickets: 151 (10%), 19% of ticket-hours; CSAT reopened 2.35 vs not 3.84
+Channel/tier/priority checks:
+                 n   esc  reopen
+channel                         
+Client portal  377  0.34    0.09
+Email          553  0.34    0.10
+Phone          292  0.33    0.11
+WhatsApp       222  0.32    0.14
+            n  frt  med_h
+priority                 
+P1         67  0.3   17.2
+P2        264  1.0   20.8
+P3        742  2.9   20.5
+P4        371  6.1   29.4
+
+=== v0 backtest (what the tool would have flagged, using only data known at the time)
+Escalations in 'not engineering' categories: 28 (54% bounced)
+Known-issue flag: fires on 132 escalations; catches 32 of 56 duplicates (57%); precision 24% vs base rate 12%
+
+=== Weekly scorecard
+          week  created  closed  open_end_of_week  open_with_eng_history  escalation_rate  bounce_rate  preventable_bounce_rate  handoffs_per_escalation  reopen_rate  median_first_response_h  csat
+0   2026-06-29       40      29                11                      8             0.32         0.38                     0.38                     1.54         0.12                     1.54  3.56
+1   2026-07-06       87      86                12                      7             0.31         0.44                     0.37                     1.41         0.13                     1.93  3.73
+2   2026-07-13       87      85                14                     10             0.31         0.56                     0.44                     1.48         0.07                     1.90  3.86
+3   2026-07-20       97      87                24                     21             0.45         0.66                     0.50                     1.80         0.05                     1.98  3.68
+4   2026-07-27       88      95                17                     15             0.44         0.54                     0.38                     1.59         0.17                     2.82  3.44
+5   2026-08-03      107     104                20                     17             0.27         0.59                     0.41                     1.62         0.11                     1.85  3.86
+6   2026-08-10      103      99                24                     19             0.42         0.63                     0.44                     1.74         0.09                     2.37  3.63
+7   2026-08-17      117     114                27                     19             0.30         0.54                     0.40                     1.57         0.10                     2.58  3.95
+8   2026-08-24      114     120                21                     14             0.31         0.46                     0.26                     1.46         0.06                     3.06  3.66
+9   2026-08-31      105      88                38                     26             0.37         0.67                     0.41                     1.54         0.15                     2.33  3.46
+10  2026-09-07      127     138                27                     17             0.31         0.51                     0.36                     1.44         0.12                     2.68  3.74
+11  2026-09-14      164     144                47                     33             0.32         0.63                     0.42                     1.71         0.07                     3.84  3.75
+12  2026-09-21      135     139                43                     29             0.33         0.55                     0.41                     1.64         0.16                     4.05  3.54
+13  2026-09-28       73      68                48                     34             0.27         0.55                     0.45                     1.65         0.07                     3.45  4.00
+
+figures written to /Users/tanish/Essentials/Core/Dev/case-study/writeup

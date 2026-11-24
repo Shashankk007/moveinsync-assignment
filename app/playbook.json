@@ -1,0 +1,97 @@
+{
+  "_note": "v0 seed content. Written from the ticket data (which issues bounce back, and why) plus assumptions about the RideOps product. Engineering (Sandeep's team) should own and correct this file; every 'returned to L1' outcome is a candidate for a new line here.",
+  "Roster / booking not syncing": {
+    "owner": "Engineering",
+    "config_checks": [
+      "Client booking cut-off in Admin > Settings matches what the admin expects (cut-off changes apply from the next roster cycle, not the current one)",
+      "Shift timing exists and is active for the site and date in question",
+      "Affected employees are active, mapped to the right site/shift, and have no pending approval",
+      "Roster was regenerated after the change (manual re-run if the change was made after cut-off)",
+      "For Excel uploads: the upload error report was checked (rejected rows are usually bad employee IDs or date formats)"
+    ],
+    "required_info": ["Roster date and shift", "Site / office", "Affected employee IDs (or the upload file)", "Booking IDs (for ad-hoc or cancelled bookings)", "When the change was made, and by whom", "Screenshot of what the admin sees"]
+  },
+  "Live tracking / GPS incorrect": {
+    "owner": "Engineering",
+    "config_checks": [
+      "Driver app is on the current version",
+      "Driver phone has location permission set to 'Always' and battery saver off",
+      "Trip was actually started in the driver app (tracking only runs on started trips)",
+      "Tracking link is for today's trip and was shared with the right recipients (links expire after trip end)",
+      "Check for a network or blackspot issue on that route (several cabs in the same area affected)"
+    ],
+    "required_info": ["Trip ID", "Vehicle number", "Driver app version", "Time window when location was wrong (IST)", "Expected vs shown location / screenshot"]
+  },
+  "Report export failing": {
+    "owner": "Engineering",
+    "config_checks": [
+      "Check the known-issues list first (report exports have the most 'duplicate of known issue' escalations)",
+      "Date range is within the supported limit; retry with a shorter range",
+      "User's role has permission for this report",
+      "For scheduled emails: recipient address is correct and the mail is not in spam or quarantine",
+      "Filters are not excluding the 'missing' trips (cancelled or no-show trips are filtered by default)"
+    ],
+    "required_info": ["Report name", "Date range and filters used", "User who tried it", "Time of attempt", "Error or screenshot", "For missing trips: 2-3 example trip IDs"]
+  },
+  "OTP / boarding issue": {
+    "owner": "Engineering",
+    "config_checks": [
+      "Employee's registered mobile number is correct",
+      "SMS is not blocked (DND, or carrier delay) and the OTP was not regenerated in between",
+      "Driver started the trip before the employee entered the OTP",
+      "Driver app is on the current version"
+    ],
+    "required_info": ["Trip ID", "Employee ID", "Time of the boarding attempt", "Driver app version", "OTP error shown (screenshot)"]
+  },
+  "Billing / invoice discrepancy": {
+    "owner": "Engineering (billing)",
+    "config_checks": [
+      "Rate card and its effective date are mapped to the right vendor",
+      "Dead-km and cancellation charges follow the client contract (often contractual, not a bug)",
+      "Toll configuration for the route was checked",
+      "The trip count was compared using the same filters and billing period as the invoice"
+    ],
+    "required_info": ["Invoice number", "Billing period", "Disputed trip IDs", "Expected vs charged amount", "Relevant contract or rate-card clause"]
+  },
+  "Employee address / geocode change": {
+    "owner": "Engineering",
+    "config_checks": [
+      "Address was updated in the employee profile AND the map pin was moved (text alone does not re-geocode)",
+      "Routing picks up changes from the next roster cycle; was the cycle re-run?",
+      "For new societies: pin placed manually on the gate location"
+    ],
+    "required_info": ["Employee IDs", "Old and new address", "Correct pin / landmark", "Date the change should apply from"]
+  },
+  "Login / access issue": {
+    "owner": "Engineering",
+    "config_checks": [
+      "User exists and has the correct role (most 'access to module' requests are role changes L1 can make)",
+      "For SSO: client's IdP mapping and user's email domain match",
+      "For lock-outs: lock-out timer has expired; unlock from Admin"
+    ],
+    "required_info": ["User email", "SSO provider (if any)", "Exact error message", "Time of attempt"]
+  },
+  "How-to / feature request": {
+    "owner": "Not engineering: L1 answers how-tos; feature requests go to Product",
+    "config_checks": [
+      "Search the help centre / macro library for the how-to",
+      "If it is a feature request, log it with Product and close the ticket with the client informed"
+    ],
+    "required_info": ["What the client is trying to achieve", "Client name / tier (for Product prioritisation)"]
+  },
+  "Cab delay / no-show complaint": {
+    "owner": "Not engineering: transport ops / vendor",
+    "config_checks": [
+      "This is usually operational: route to the transport ops desk or vendor",
+      "Escalate to engineering only if GPS or trip logs show a system fault (e.g. driver marked no-show without reaching the pickup)"
+    ],
+    "required_info": ["Trip ID", "Route number", "Shift time", "Employee IDs affected", "GPS trail evidence (if claiming a system fault)"]
+  },
+  "Driver / vehicle compliance docs": {
+    "owner": "Not engineering: compliance team",
+    "config_checks": [
+      "Route to the compliance team to block the vehicle; engineering only if blocking failed in the system"
+    ],
+    "required_info": ["Vehicle number", "Document type and expiry date", "Vendor"]
+  }
+}
